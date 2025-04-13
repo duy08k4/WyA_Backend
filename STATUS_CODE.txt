@@ -1,0 +1,3 @@
+Code: 200 => Yêu cầu thành công.
+Code: 404 => Yêu cầu thất bại.
+Code: 405 => Phương thức request sai.

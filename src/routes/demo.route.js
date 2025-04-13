@@ -1,12 +1,12 @@
 // Import libraries
 const express = require("express")
-const router = express.Router()
+const demoRouter = express.Router()
 
 // Import controllers
 const demoController = require("../controllers/demo.controller")
 
 // Set routes
-router.use("/", demoController.showContent)
-router.use("/more", demoController.showContentMore)
+demoRouter.use("/", demoController.showContent)
+demoRouter.use("/more", demoController.showContentMore)
 
-module.exports = router
+module.exports = demoRouter
