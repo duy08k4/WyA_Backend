@@ -1,5 +1,8 @@
 // Import model
 const loginAccount_Model = require("../models/loginAccount.model")
+const { base64URL } = require("./modules/base64URL")
+const jwt = require("jsonwebtoken")
+const { db } = require("../config/firebaseSDK")
 
 // Controller
 class LoginController {
@@ -21,20 +24,23 @@ class LoginController {
                     })
                 }
                 
+                // Get login response from model
                 const loginAccount_response = await loginAccount_Model(inputData)
                 
                 // Set cookies if login successful
                 if (loginAccount_response.status === "S") {
-                    // Set access token cookie
-                    res.cookie("accessToken", loginAccount_response.data.accessToken, {
+                    // Get tokens and user data from response
+                    const { accessToken, refreshToken } = loginAccount_response.data
+                    
+                    // Set cookies with base64URL encoding
+                    res.cookie(base64URL(process.env.CK_acToken), base64URL(accessToken), {
                         httpOnly: true,
-                        maxAge: "15m" 
+                        secure: true
                     })
                     
-                    // Set refresh token cookie
-                    res.cookie("refreshToken", loginAccount_response.data.refreshToken, {
+                    res.cookie(base64URL(process.env.CK_rfToken), base64URL(refreshToken), {
                         httpOnly: true,
-                        maxAge: "15m" 
+                        secure: true
                     })
                 }
 

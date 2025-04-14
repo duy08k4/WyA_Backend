@@ -5,6 +5,7 @@ const loginRouter = express.Router()
 // Import controller
 const loginController = require("../controllers/login.controller")
 
-loginRouter.use("/", loginController.loginAccount)
+// Handle login route
+loginRouter.post("/", loginController.loginAccount)
 
 module.exports = loginRouter

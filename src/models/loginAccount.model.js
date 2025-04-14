@@ -7,17 +7,17 @@ require("dotenv").config()
 // Model
 const loginAccount_Model = async (inputData) => {
     // Check for required fields
-    if (!inputData || !inputData.username || !inputData.password) {
+    if (!inputData || !inputData.username || !inputData.gmail || !inputData.password) {
         console.log('Missing required fields:', inputData)
         return {
-            status: "E",
+            status: E,
             data: {
                 mess: "Missing required fields"
             }
         }
     }
 
-    const { username, password } = inputData
+    const { username, gmail, password } = inputData
     // Search for user by username
     console.log('Searching for user:', username)
     
@@ -39,7 +39,7 @@ const loginAccount_Model = async (inputData) => {
         if (!foundUser) {
             console.log('User not found:', username)
             return {
-                status: "E",
+                status: E,
                 data: {
                     mess: "Invalid credentials"
                 }
@@ -52,14 +52,13 @@ const loginAccount_Model = async (inputData) => {
             
             // Generate JWT tokens
             const userID = foundUser.uuid || docId
-            const userEmail = foundUser.gmail || ""
             const userRole = foundUser.role || "user"
             let refreshToken
             
             // Check if refresh token exists and is valid
             if (!foundUser.rfToken) {
                 refreshToken = jwt.sign(
-                    { email: userEmail, uuid: userID }, 
+                    { username, userID }, 
                     process.env.SCKEY, 
                     { expiresIn: "15m" }
                 )
@@ -79,7 +78,7 @@ const loginAccount_Model = async (inputData) => {
                 } catch (err) {
                     // Generate new refresh token if expired
                     refreshToken = jwt.sign(
-                        { email: userEmail, uuid: userID }, 
+                        { username, userID }, 
                         process.env.SCKEY, 
                         { expiresIn: "15m" }
                     )
@@ -93,24 +92,29 @@ const loginAccount_Model = async (inputData) => {
             
             // Generate access token
             const accessToken = jwt.sign(
-                { email: userEmail, uuid: userID }, 
+                { username, userID }, 
                 process.env.SCKEY, 
                 { expiresIn: "15m" }
             )
+            
+            // Get user role and permissions
+            // let getLimit = await db.collection("rules").doc("limitation").get()
+            // let getRole = await db.collection("roles").doc(userRole).get()
+            // let limitAmountLink = getRole.data().amountLink
             
             return {
                 status: S,
                 data: {
                     mess: "Successful",
-                    accessToken: accessToken,
-                    refreshToken: refreshToken,
+                    acToken: accessToken,
+                    rfToken: refreshToken,
                     userRole: userRole
                 }
             }
         } else {
             console.log('Password incorrect')
             return {
-                status: E,
+                status: "E",
                 data: {
                     mess: "Invalid passwords"
                 }

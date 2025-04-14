@@ -1,43 +1,102 @@
 // JWT Authentication Middleware
 const jwt = require('jsonwebtoken')
 const { db } = require('../config/firebaseSDK')
+const { base64URL } = require('../controllers/modules/base64URL')
 require('dotenv').config()
 
-// Verify JWT token middleware
-const verifyToken = (req, res, next) => {
-    // Get token from cookies or authorization header
-    const accessToken = req.cookies.accessToken || 
-                       (req.headers.authorization && req.headers.authorization.split(' ')[1]);
-    
-    if (!accessToken) {
-        return res.json({
-            status: E,
-            data: {
-                mess: "Access denied. No token provided."
-            }
-        })
-    }
+// AUTHORIZE FOR LOGIN
+const authorizeLogin = (req, res, next) => {
+    let getAccessToken = req.cookies[base64URL(process.env.CK_acToken)] ? atob(req.cookies[base64URL(process.env.CK_acToken)]) : undefined
+    let getRefreshToken = req.cookies[base64URL(process.env.CK_rfToken)] ? atob(req.cookies[base64URL(process.env.CK_rfToken)]) : undefined
+    let newAccessToken
 
-    try {
-        // Verify token
-        const decoded = jwt.verify(accessToken, process.env.SCKEY)
-        req.user = decoded;
-        next()
-    } catch (error) {
-        return res.json({
-            status: E,
-            data: {
-                mess: "Invalid token."
+    if(getAccessToken && getRefreshToken) {
+        jwt.verify(getAccessToken, process.env.SCKEY, (err, decoded) => {
+            if(err) {
+                jwt.verify(getRefreshToken, process.env.SCKEY, (err, rfData) => {
+                    if(err) {
+                        // Token expired, user needs to login again
+                    } else {
+                        newAccessToken = jwt.sign({username: rfData.username, userID: rfData.userID}, process.env.SCKEY, { expiresIn: "15m" })
+                        res.cookie(base64URL(process.env.CK_acToken), base64URL(newAccessToken), {
+                            httpOnly: true,
+                            secure: true
+                        })
+
+                        req.user = {
+                            username: rfData.username,
+                            userID: rfData.userID,
+                            logined: true,
+                            limitAmountLink: atob(req.cookies[base64URL(process.env.ammountLink)])
+                        }
+                    }
+                })
+            } else {
+                req.user = {
+                    username: decoded.username,
+                    userID: decoded.userID,
+                    logined: true,
+                    limitAmountLink: atob(req.cookies[base64URL(process.env.ammountLink)])
+                }
             }
         })
     }
+    next()
+}
+
+// AUTHRIZE FOR FUNCTION
+const authorize = (req, res, next) => {
+    let getAccessToken = req.cookies[base64URL(process.env.CK_acToken)] ? atob(req.cookies[base64URL(process.env.CK_acToken)]) : undefined
+    let getRefreshToken = req.cookies[base64URL(process.env.CK_rfToken)] ? atob(req.cookies[base64URL(process.env.CK_rfToken)]) : undefined
+    let newAccessToken
+
+    if(getAccessToken && getRefreshToken) {
+        jwt.verify(getAccessToken, process.env.SCKEY, (err, decoded) => {
+            if(err) {
+                jwt.verify(getRefreshToken, process.env.SCKEY, (err, rfData) => {
+                    if(err) {
+                        return res.json({
+                            status: "E",
+                            message: "Your session has expired. Please login again.",
+                            redirect: "/login"
+                        })
+                    } else {
+                        newAccessToken = jwt.sign({username: rfData.username, userID: rfData.userID}, process.env.SCKEY, { expiresIn: "20s" })
+                        res.cookie(base64URL(process.env.CK_acToken), base64URL(newAccessToken), {
+                            httpOnly: true,
+                            secure: true
+                        })
+
+                        req.user = {
+                            username: rfData.username,
+                            userID: rfData.userID,
+                        }
+
+                        next()
+                    }
+                })
+            } else {
+                req.user = {
+                    username: decoded.username,
+                    userID: decoded.userID,
+                }
+
+                next()
+            }
+        })
+        // If no access token or refresh token is found
+    } else return res.json({
+        status: "E",
+        message: "Please login first.",
+        redirect: "/login"
+    })
 }
 
 // Refresh token middleware
 const refreshToken = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken
+    const getRefreshToken = req.cookies[base64URL(process.env.CK_rfToken)] ? atob(req.cookies[base64URL(process.env.CK_rfToken)]) : undefined
     
-    if (!refreshToken) {
+    if (!getRefreshToken) {
         return res.json({
             status: E,
             data: {
@@ -48,45 +107,19 @@ const refreshToken = async (req, res) => {
 
     try {
         // Verify refresh token
-        const decoded = jwt.verify(refreshToken, process.env.SCKEY)
-        
-        // Find user in database
-        const userEmail = decoded.email
-        const querySnapshot = await db.collection("accounts").get()
-        
-        let foundUser = null
-        let docId = null
-        
-        querySnapshot.forEach((doc) => {
-            const userData = doc.data()
-            if (userData.gmail === userEmail) {
-                foundUser = userData
-                docId = doc.id
-            }
-        })
-        
-        if (!foundUser) {
-            return res.json({
-                status: E,
-                data: {
-                    mess: "User not found"
-                }
-            })
-        }
+        const decoded = jwt.verify(getRefreshToken, process.env.SCKEY)
         
         // Generate new access token
-        const userID = foundUser.uuid || docId
-        const accessToken = jwt.sign(
-            { email: userEmail, uuid: userID },
+        const newAccessToken = jwt.sign(
+            {username: decoded.username, userID: decoded.userID},
             process.env.SCKEY,
             { expiresIn: "15m" }
-        );
+        )
         
         // Set new access token cookie
-        res.cookie("accessToken", accessToken, {
+        res.cookie(base64URL(process.env.CK_acToken), base64URL(newAccessToken), {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: "15m"
+            secure: true
         })
         
         return res.json({
@@ -105,4 +138,4 @@ const refreshToken = async (req, res) => {
     }
 }
 
-module.exports = { verifyToken, refreshToken }
+module.exports = { authorizeLogin, authorize, refreshToken }
