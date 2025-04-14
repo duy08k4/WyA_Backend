@@ -6,7 +6,7 @@ const demoRouter = express.Router()
 const demoController = require("../controllers/demo.controller")
 
 // Set routes
-demoRouter.use("/", demoController.showContent)
 demoRouter.use("/more", demoController.showContentMore)
+demoRouter.use("/", demoController.showContent)
 
 module.exports = demoRouter

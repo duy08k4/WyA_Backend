@@ -1,18 +1,19 @@
-const db = require("../config/firebaseSDK")
+// Import model
+const createAccount_Model = require("../models/createAccount.model")
 
+// Controller
 class RegisterController {
     // [POST] /create-account
-    createAccount(req, res) {
+    async createAccount(req, res) {
         let requestMethod = req.method
 
         switch (requestMethod) {
             case "POST":
-                return res.json({
-                    status: 200,
-                    data: {
-                        mes: "Got it !!"
-                    }
-                })
+                const inputData = req.body.data
+                console.log(req.body)
+                const createAccount_response = await createAccount_Model(inputData)
+
+                return res.json(createAccount_response)
         
             default:
                 return res.json({
