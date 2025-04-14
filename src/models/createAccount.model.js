@@ -32,14 +32,14 @@ const createAccount_Model = async (inputData) => {
         return {
             status: 200,
             data: {
-                mess: "Successfull"
+                mess: "Successful"
             }
         }
     }).catch(() => {
         return {
             status: 404,
             data: {
-                mess: "Unsuccessfull"
+                mess: "Unsuccessful"
             }
         }
     })
@@ -48,3 +48,11 @@ const createAccount_Model = async (inputData) => {
 }
 
 module.exports = createAccount_Model
+// example for postman
+// {
+//     "data": {
+//       "username": "testuser",
+//       "gmail": "testuser@gmail.com",
+//       "password": "password123"
+//     }
+//   }
