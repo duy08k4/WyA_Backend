@@ -1,19 +1,20 @@
-//import model
-const login_Model = require("../models/loginAccount.model")
+// Import model
+const loginAccount_Model = require("../models/loginAccount.model")
 
-//controller
-class LoginController {
-    //[POST] /login
-    async login(req, res) {
+// Controller
+class loginController {
+    // [POST] /login-account
+    async loginAccount(req, res) {
         let requestMethod = req.method
 
         switch (requestMethod) {
             case "POST":
                 const inputData = req.body.data
-                const login_response = await login_Model(inputData)
+                console.log(req.body)
+                const loginAccount_response = await loginAccount_Model(inputData)
 
-                return res.json(login_response)
-            
+                return res.json(loginAccount_response)
+        
             default:
                 return res.json({
                     status: 405,
@@ -25,4 +26,4 @@ class LoginController {
     }
 }
 
-module.exports = new LoginController()
+module.exports = new LoginController
