@@ -21,10 +21,22 @@ const loginAccount_Model = async (inputData) => {
        if (hs256(passwordInput) != password) {
         return {
             status: 404,
-            data : {
+            data: {
                 mess: "Unsuccessful"
             }
          }
+       }
+       
+       // Return user data for JWT token creation
+       return {
+           status: 200,
+           data: {
+               mess: "Successful",
+               user: {
+                   gmail: gmail,
+                   ...user.data()
+               }
+           }
        }
     }
 }

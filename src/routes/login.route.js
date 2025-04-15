@@ -5,6 +5,21 @@ const loginRouter = express.Router()
 // Import controller
 const loginController = require("../controllers/login.controller")
 
-loginRouter.use("/", loginController.login)
+// Import middleware
+const { verifyToken } = require("../middleware/authorization")
+
+// Login route
+loginRouter.post("/", loginController.loginAccount)
+
+// Example 
+// loginRouter.get("/protected", verifyToken, (req, res) => {
+//     res.json({
+//         status: 200,
+//         data: {
+//             mess: "Protected route accessed successfully",
+//             user: req.user
+//         }
+//     })
+// })
 
 module.exports = loginRouter
