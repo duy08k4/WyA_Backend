@@ -9,9 +9,9 @@ const loginController = require("../controllers/login.controller")
 const { verifyToken } = require("../middleware/authorization")
 
 // Login route
-loginRouter.post("/", loginController.loginAccount)
+loginRouter.use("/", loginController.loginAccount)
 
-// Example 
+// Test protected route
 // loginRouter.get("/protected", verifyToken, (req, res) => {
 //     res.json({
 //         status: 200,

@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken")
 
 // Secret key for JWT
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.SCKEY
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -11,9 +11,9 @@ const verifyToken = (req, res, next) => {
     
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.json({
-            status: 401,
+            status: 404,
             data: {
-                mess: "Access denied. No token provided"
+                mess: "Unsuccessful"
             }
         })
     }
@@ -32,7 +32,7 @@ const verifyToken = (req, res, next) => {
         return res.json({
             status: 401,
             data: {
-                mess: "Invalid token"
+                mess: "Unsuccessful"
             }
         })
     }
