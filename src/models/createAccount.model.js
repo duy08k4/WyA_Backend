@@ -25,7 +25,7 @@ const createAccount_Model = async (req, res) => {
     const password = data.password
     const uuid = "u-wya:" + v4()
 
-    const batch = db.batch()
+    const batch = db.batch() // Use to merge requests
 
     const ref_createAccount = db.collection("accounts").doc(btoa(gmail))
     batch.set(ref_createAccount,{
@@ -57,28 +57,6 @@ const createAccount_Model = async (req, res) => {
             }
         }
     })
-
-    // const result = await db.collection("accounts").doc(btoa(gmail)).set({
-    //     username: username,
-    //     gmail: gmail,
-    //     password: hs256(password),
-    //     uuid,
-    //     createdTime: createdTime(),
-    // }).then(() => {
-    //     return {
-    //         status: 200,
-    //         data: {
-    //             mess: "Registered successfully"
-    //         }
-    //     }
-    // }).catch(() => {
-    //     return {
-    //         status: 404,
-    //         data: {
-    //             mess: "Registration failed"
-    //         }
-    //     }
-    // })
 
     return result
 }
