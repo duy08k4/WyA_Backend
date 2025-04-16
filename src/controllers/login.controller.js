@@ -1,7 +1,6 @@
 // Import model
 const loginAccount_Model = require("../models/loginAccount.model")
 const jwt = require("jsonwebtoken")
-const { JWT_SECRET } = require("../middleware/authorization")
 
 // Controller
 class LoginController {
@@ -11,15 +10,16 @@ class LoginController {
 
         switch (requestMethod) {
             case "POST":
-                await loginAccount_Model(req, res)
+                const loginAccount_respones = await loginAccount_Model(req, res)
+                return res.json(loginAccount_respones)
 
-            default: 
-            return res.json({
-                status: 405,
-                data: {
-                    mess: "Wrong method"
-                }
-            })
+            default:
+                return res.json({
+                    status: 405,
+                    data: {
+                        mess: "Wrong method"
+                    }
+                })
         }
     }
 }

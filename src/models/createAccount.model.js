@@ -17,32 +17,67 @@ function createdTime () {
     return `${hour}:${minute < 10 ? `0${minute}` : minute} - ${date} THG ${month}, ${year}`
 }
 
-
 // Model
-const createAccount_Model = async (inputData) => {
-    const { username, gmail, password } = inputData
+const createAccount_Model = async (req, res) => {
+    const data = req.body.data
+    const username = data.username
+    const gmail = data.gmail
+    const password = data.password
     const uuid = "u-wya:" + v4()
-    const result = await db.collection("accounts").doc(btoa(gmail)).set({
+
+    const batch = db.batch()
+
+    const ref_createAccount = db.collection("accounts").doc(btoa(gmail))
+    batch.set(ref_createAccount,{
         username: username,
         gmail: gmail,
         password: hs256(password),
         uuid,
         createdTime: createdTime(),
-    }).then(() => {
+    })
+
+    const ref_verifyAccount = db.collection("verifications").doc(btoa(gmail))
+    batch.set(ref_verifyAccount, {
+        code: (Math.floor(Math.random() * 8999) + 1000).toString()
+    })
+
+    const result = await batch.commit().then(() => {
         return {
             status: 200,
             data: {
-                mess: "Successfull"
+                mess: "Registered successfully"
             }
         }
     }).catch(() => {
         return {
             status: 404,
             data: {
-                mess: "Unsuccessfull"
+                mess: "Registration failed"
             }
         }
     })
+
+    // const result = await db.collection("accounts").doc(btoa(gmail)).set({
+    //     username: username,
+    //     gmail: gmail,
+    //     password: hs256(password),
+    //     uuid,
+    //     createdTime: createdTime(),
+    // }).then(() => {
+    //     return {
+    //         status: 200,
+    //         data: {
+    //             mess: "Registered successfully"
+    //         }
+    //     }
+    // }).catch(() => {
+    //     return {
+    //         status: 404,
+    //         data: {
+    //             mess: "Registration failed"
+    //         }
+    //     }
+    // })
 
     return result
 }

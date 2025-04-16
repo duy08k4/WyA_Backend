@@ -2,43 +2,46 @@
 const db = require("../config/firebaseSDK");
 const hs256 = require("js-sha256");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../middleware/authorization");
 
 // Model
 const loginAccount_Model = async (req, res) => {
   const data = req.body.data
-    const gmail = data.gmail
-    const passwordInput = data.passwordInput
+  const gmail = data.gmail
+  const passwordInput = data.passwordInput
   const user = await db.collection("accounts").doc(btoa(gmail)).get();
 
   if (!user.exists) {
-    return res.json({
+    return {
       status: 404,
       data: {
         mess: "Failed to login",
       },
-    })
+    }
   } else {
     const password = user.data().password;
 
     if (password !== hs256(passwordInput)) {
-      return res.json({
+      return {
         status: 404,
         data: {
           mess: "Failed to login",
         },
-      })
+      }
     }
 
     const uuid = user.data().uuid;
+
+    // Create accessToken
     const acToken = jwt.sign({ gmail: gmail, userID: uuid }, JWT_SECRET, {
       expiresIn: "15m",
     });
 
+    // Create refreshToken
     const rfToken = jwt.sign({ gmail: gmail, userID: uuid }, JWT_SECRET, {
       expiresIn: "1d",
     });
 
+    // Set cookie
     res.cookie("acToken", acToken, {
       httpOnly: true,
       secure: true,
@@ -49,12 +52,12 @@ const loginAccount_Model = async (req, res) => {
       secure: true,
     });
 
-    return res.json({
+    return {
       status: 200,
       data: {
-        mess: "Successful",
+        mess: "Log in successfully",
       },
-    })
+    }
   }
 };
 
