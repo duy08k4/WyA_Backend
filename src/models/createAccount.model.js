@@ -33,6 +33,7 @@ const createAccount_Model = async (req, res) => {
         gmail: gmail,
         password: hs256(password),
         uuid,
+        activate: false,
         createdTime: createdTime(),
     })
 
