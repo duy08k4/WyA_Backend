@@ -9,10 +9,7 @@ class RegisterController {
 
         switch (requestMethod) {
             case "POST":
-                const inputData = req.body.data
-                console.log(req.body)
-                const createAccount_response = await createAccount_Model(inputData)
-
+                const createAccount_response = await createAccount_Model(req, res)
                 return res.json(createAccount_response)
         
             default:
