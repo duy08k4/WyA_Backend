@@ -11,12 +11,13 @@ const port = process.env.PORT || 9021
 const routes = require("./routes/mainRoutes")
 
 // Use
+app.use(cookieParser())
 app.use(express.json())
 dotenv.config()
 app.use(morgan("combined"))
-app.use(cookieParser())
 app.use(cors({
-    origin: process.env.FRONTEND_GATE
+    origin: process.env.FRONTEND_GATE,
+    credentials: true
 }))
 
 // Route

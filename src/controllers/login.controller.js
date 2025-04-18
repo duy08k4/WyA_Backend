@@ -2,6 +2,13 @@
 const loginAccount_Model = require("../models/loginAccount.model")
 const jwt = require("jsonwebtoken")
 
+const wrongMethod_response = {
+    status: 405,
+    data: {
+        mes: "Wrong method"
+    }
+}
+
 // Controller
 class LoginController {
     // [POST] /login-account
@@ -14,12 +21,7 @@ class LoginController {
                 return res.json(loginAccount_respones)
 
             default:
-                return res.json({
-                    status: 405,
-                    data: {
-                        mess: "Wrong method"
-                    }
-                })
+                return res.json(wrongMethod_response)
         }
     }
 }
