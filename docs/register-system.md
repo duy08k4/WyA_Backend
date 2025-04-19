@@ -74,7 +74,7 @@ Verifies the OTP code sent to user's email.
 ### 3. Create Account
 Creates a new user account.
 
-- **URL**: `/`
+- **URL**: `/create-account`
 - **Method**: `POST`
 - **Request Body**:
   ```json
