@@ -10,7 +10,7 @@ http://localhost:3000/create-account
 ### 1. Send OTP
 Sends a verification code to the user's email.
 
-- **URL**: `/send-otp`
+- **Endpoint**: `/send-otp`
 - **Method**: `POST`
 - **Request Body**:
   ```json
@@ -29,7 +29,16 @@ Sends a verification code to the user's email.
     }
   }
   ```
-- **Error Response** (429):
+- **Error Response** (404):
+  ```json
+  {
+    "status": 404,
+    "data": {
+      "mess": "Failed to send"
+    }
+  }
+  ```
+   **Error Response (Warning)** (429):
   ```json
   {
     "status": 429,
@@ -42,7 +51,7 @@ Sends a verification code to the user's email.
 ### 2. Verify OTP
 Verifies the OTP code sent to user's email.
 
-- **URL**: `/verify-otp`
+- **Endpoint**: `/verify-otp`
 - **Method**: `POST`
 - **Request Body**:
   ```json
@@ -74,8 +83,18 @@ Verifies the OTP code sent to user's email.
 ### 3. Create Account
 Creates a new user account.
 
-- **URL**: `/create-account`
+- **Endpoint**: `/create-account`
 - **Method**: `POST`
+- **Data Structure**: 
+  ```javascript
+  {
+      username: username,
+      gmail: gmail,
+      password: hs256(password),
+      uuid,
+      createdTime: createdTime(),
+  }
+  ```
 - **Request Body**:
   ```json
   {

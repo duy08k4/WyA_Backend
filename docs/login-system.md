@@ -10,7 +10,7 @@ http://localhost:3000/login-account
 ### Login
 Authenticates a user and creates session tokens.
 
-- **URL**: `/login-account`
+- **Endpoint**: `/login-account`
 - **Method**: `POST`
 - **Request Body**:
   ```json
