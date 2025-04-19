@@ -79,6 +79,7 @@ The system returns standardized error responses:
 - 403: Logged in but no access permission
 - 404: Request failed
 - 405: Invalid request method
+- 429: OTP is sent
 
 ### 5. Testing
 Regular testing should include:
