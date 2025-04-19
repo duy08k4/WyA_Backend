@@ -1,139 +1,120 @@
-# Registration System Documentation
+# Registration API Documentation
 
-## System Components
+## Base URL
+```
+http://localhost:3000/create-account
+```
 
-### 1. Route (`src/routes/register.route.js`)
-- **Purpose**: Defines the registration endpoints routing
-- **File**: `register.route.js`
-- **Dependencies**: Express.js
-- **Endpoints**:
-  - `/send-otp`: Sends verification OTP
-  - `/verify-otp`: Verifies OTP code
-  - `/`: Creates new account
+## Endpoints
 
-### 2. Controller (`src/controllers/register.controller.js`)
-- **Purpose**: Handles HTTP request/response logic for registration operations
-- **File**: `register.controller.js`
-- **Dependencies**: 
-  - `createAccount_Model`
-  - `sendOtp_Model`
-  - `verifyOtp_Model`
-- **Methods**:
-  - `createAccount(req, res)`: Handles account creation
-  - `sendOTP(req, res)`: Handles OTP sending
-  - `verifyOTP(req, res)`: Handles OTP verification
-  - Returns 405 status for unsupported HTTP methods
+### 1. Send OTP
+Sends a verification code to the user's email.
 
-### 3. Models
-#### a. Create Account Model (`src/models/createAccount.model.js`)
-- **Purpose**: Implements account creation logic
-- **File**: `createAccount.model.js`
-- **Dependencies**:
-  - Firebase SDK
-  - UUID
-  - js-sha256
-- **Key Features**:
-  - Account existence checking
-  - Password hashing
-  - UUID generation
-  - Timestamp creation
+- **URL**: `/send-otp`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "data": {
+      "gmail": "user@example.com"
+    }
+  }
+  ```
+- **Success Response** (200):
+  ```json
+  {
+    "status": 200,
+    "data": {
+      "mess": "OTP sent"
+    }
+  }
+  ```
+- **Error Response** (429):
+  ```json
+  {
+    "status": 429,
+    "data": {
+      "mess": "OTP has been sent"
+    }
+  }
+  ```
 
-#### b. Send OTP Model (`src/models/sendOtp.model.js`)
-- **Purpose**: Handles OTP generation and sending
-- **File**: `sendOtp.model.js`
-- **Dependencies**:
-  - Nodemailer
-  - Resend
-- **Key Features**:
-  - OTP generation
-  - Email sending
-  - Rate limiting (5 minutes cooldown)
-  - HTML email template
+### 2. Verify OTP
+Verifies the OTP code sent to user's email.
 
-#### c. Verify OTP Model (`src/models/verifyOtp.model.js`)
-- **Purpose**: Verifies OTP codes
-- **File**: `verifyOtp.model.js`
-- **Key Features**:
-  - OTP validation
-  - Cookie-based verification
+- **URL**: `/verify-otp`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "data": {
+      "inputOtp": "1234"
+    }
+  }
+  ```
+- **Success Response** (200):
+  ```json
+  {
+    "status": 200,
+    "data": {
+      "mess": "Verified"
+    }
+  }
+  ```
+- **Error Response** (400):
+  ```json
+  {
+    "status": 400,
+    "data": {
+      "mess": "OTP code is incorrect"
+    }
+  }
+  ```
 
-## Registration Flow
-1. User initiates registration with email
-2. System sends OTP to user's email
-3. User verifies OTP
-4. Upon successful verification:
-   - Creates new account with hashed password
-   - Generates unique UUID
-   - Stores account data in Firebase
-5. Returns success/failure response
+### 3. Create Account
+Creates a new user account.
 
-## Security Features
-- Password hashing using SHA-256
-- Email verification through OTP
-- Rate limiting for OTP requests
-- Secure cookie management
-- UUID-based user identification
-- Timestamp tracking
+- **URL**: `/`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "data": {
+      "username": "testuser",
+      "gmail": "test@example.com",
+      "password": "yourpassword"
+    }
+  }
+  ```
+- **Success Response** (200):
+  ```json
+  {
+    "status": 200,
+    "data": {
+      "mess": "Registered successfully"
+    }
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "status": 404,
+    "data": {
+      "mess": "Account already exist"
+    }
+  }
+  ```
 
-## Maintenance Guidelines
-
-### 1. Environment Variables
-Ensure the following environment variables are properly set:
-- `GMAIL_PASSCODE`: Email service password
-- Firebase configuration variables
-
-### 2. Database Maintenance
-- Regularly backup Firebase database
-- Monitor new account creation
-- Implement account cleanup for unverified accounts
-
-### 3. Security Updates
-- Keep all dependencies updated:
-  - `nodemailer`
-  - Firebase SDK
-  - Express.js
-- Regularly review OTP expiration times
-- Monitor email service status
-
-### 4. Error Handling
-The system returns standardized error responses:
+## Status Codes
 - 200: Request successful
 - 400: OTP verification failed
 - 404: Registration failed/Account exists
 - 405: Invalid request method
 - 429: OTP already sent (rate limit)
 
-### 5. Testing
-Regular testing should include:
-- Account creation with valid data
-- OTP sending and verification
-- Rate limiting functionality
-- Email template rendering
-- Database operations
-- Error handling scenarios
+## Testing with CURL
 
-## Troubleshooting
-
-### Common Issues
-1. **Registration Failures**
-   - Check Firebase connection
-   - Verify email service configuration
-   - Confirm account doesn't exist
-
-2. **OTP Issues**
-   - Verify email service credentials
-   - Check rate limiting
-   - Validate OTP expiration
-
-3. **Email Service**
-   - Verify Gmail credentials
-   - Check email template
-   - Monitor delivery rates
-
-### API Testing with CURL
-You can test the registration endpoints using the following CURL commands:
-
-1. **Send OTP**:
+### Send OTP
 ```bash
 curl -X POST http://localhost:3000/create-account/send-otp \
 -H "Content-Type: application/json" \
@@ -144,7 +125,7 @@ curl -X POST http://localhost:3000/create-account/send-otp \
 }'
 ```
 
-2. **Verify OTP**:
+### Verify OTP
 ```bash
 curl -X POST http://localhost:3000/create-account/verify-otp \
 -H "Content-Type: application/json" \
@@ -155,7 +136,7 @@ curl -X POST http://localhost:3000/create-account/verify-otp \
 }'
 ```
 
-3. **Create Account**:
+### Create Account
 ```bash
 curl -X POST http://localhost:3000/create-account \
 -H "Content-Type: application/json" \
@@ -168,8 +149,9 @@ curl -X POST http://localhost:3000/create-account \
 }'
 ```
 
-Notes:
-- Replace `localhost:3000` for production
-- The response will include cookies for OTP verification
-- Use `-v` flag for verbose output to see headers and cookies
+## Notes
+- OTP expires after 5 minutes
+- Rate limit: One OTP request per 5 minutes
+- All requests require `Content-Type: application/json` header
+- Cookies are used for OTP verification
 
