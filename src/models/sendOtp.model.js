@@ -1,4 +1,3 @@
-const { Resend } = require("resend")
 const nodemailer = require("nodemailer")
 
 // Checking existence's verifycode
