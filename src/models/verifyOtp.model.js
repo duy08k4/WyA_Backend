@@ -4,6 +4,7 @@ const verifyOtp_Model = (req, res) => {
     const getInputOtp = data.inputOtp
 
     if (getInputOtp == getOtp) {
+        res.clearCookie("otp")
         return {
             status: 200,
             data: {

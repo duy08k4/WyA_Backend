@@ -7,7 +7,7 @@ const verifyOtp_Model = require("../models/verifyOtp.model")
 const wrongMethod_response = {
     status: 405,
     data: {
-        mes: "Wrong method"
+        mess: "Wrong method"
     }
 }
 

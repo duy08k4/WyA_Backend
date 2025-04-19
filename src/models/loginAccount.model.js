@@ -32,12 +32,12 @@ const loginAccount_Model = async (req, res) => {
     const uuid = user.data().uuid;
 
     // Create accessToken
-    const acToken = jwt.sign({ gmail: gmail, userID: uuid }, JWT_SECRET, {
+    const acToken = jwt.sign({ gmail: gmail, userID: uuid }, process.env.SCKEY, {
       expiresIn: "15m",
     });
 
     // Create refreshToken
-    const rfToken = jwt.sign({ gmail: gmail, userID: uuid }, JWT_SECRET, {
+    const rfToken = jwt.sign({ gmail: gmail, userID: uuid }, process.env.SCKEY, {
       expiresIn: "1d",
     });
 

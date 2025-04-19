@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 const wrongMethod_response = {
     status: 405,
     data: {
-        mes: "Wrong method"
+        mess: "Wrong method"
     }
 }
 

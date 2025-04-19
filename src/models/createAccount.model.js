@@ -24,6 +24,7 @@ async function checkExistence(req, res) {
     const userRef = await db.collection("accounts").doc(btoa(gmail)).get()
 
     if (userRef.exists) {
+        res.clearCookie("otp")
         return {
             status: 404,
             data: {

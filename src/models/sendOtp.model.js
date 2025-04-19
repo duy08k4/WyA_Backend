@@ -16,14 +16,8 @@ const verifyCodeChecking = (req, res) => {
   } else return false
 }
 
-// Send verify code
-const sendOtp_Model = async (req, res) => {
-  const checking = verifyCodeChecking(req, res)
-  if (checking.status == 429) {
-    return checking
-  } 
-
-  const data = req.body.data
+// Send OTP function
+const sendOTP = async (data, res) => {
   const targetGmail = data.gmail
   const emailSender = "nluecar240@gmail.com";
   const password = process.env.GMAIL_PASSCODE;
@@ -47,7 +41,7 @@ const sendOtp_Model = async (req, res) => {
           ${OTP}
         </span>
       </div>
-      <p style="font-size: 14px; color: #8f98a0; text-align: center;">This code will expire in 5 minutes.</p>
+      <p style="font-size: 14px; color: #8f98a0; text-align: center;">This code will expire in <strong><u>1 minutes</u></strong>.</p>
       <hr style="border: none; border-top: 1px solid #2a475e; margin: 30px 0;">
       <p style="font-size: 12px; color: #8f98a0; text-align: center;">
         If you didn't request this, please ignore this email.<br>
@@ -62,7 +56,7 @@ const sendOtp_Model = async (req, res) => {
     html: emailForm,
   }).then(() => {
     res.cookie("otp", OTP, {
-      maxAge: 5 * 60 * 1000,
+      maxAge: 1 * 60 * 1000,
       httpOnly: true,
       secure: true,
     });
@@ -74,7 +68,8 @@ const sendOtp_Model = async (req, res) => {
       }
     }
   })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err)
       return {
         status: 404,
         data: {
@@ -84,7 +79,32 @@ const sendOtp_Model = async (req, res) => {
     })
 
   return result
+}
 
+// Send verify code
+const sendOtp_Model = async (req, res) => {
+  const getMethodOTP = req.body.data.method
+
+  switch (getMethodOTP) {
+    case "send":
+      const checking = verifyCodeChecking(req, res)
+      if (checking.status == 429) {
+        return checking
+      }
+
+      return sendOTP(req.body.data, res)
+      
+    case "resend":
+      return sendOTP(req.body.data, res)
+
+    default:
+      return {
+        status: 404,
+        data: {
+          mess: "(Dev) Error in SendOTP"
+        }
+      }
+  }
 }
 
 module.exports = sendOtp_Model
