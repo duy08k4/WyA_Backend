@@ -16,7 +16,7 @@ app.use(express.json())
 dotenv.config()
 app.use(morgan("combined"))
 app.use(cors({
-    origin: process.env.FRONTEND_GATE,
+    origin: process.env.FRONTEND_GATE || "https://wyabackendtest.vercel.app",
     credentials: true
 }))
 
