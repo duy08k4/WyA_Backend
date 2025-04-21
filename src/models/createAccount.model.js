@@ -5,7 +5,7 @@ const { v4 } = require("uuid")
 const db = require("../config/firebaseSDK")
 const hs256 = require("js-sha256")
 
-// Support func
+// Generate create account time
 function createdTime() {
     const time = new Date()
     const minute = time.getMinutes()
@@ -54,6 +54,22 @@ const createAccount_Model = async (req, res) => {
         password: hs256(password),
         uuid,
         createdTime: createdTime(),
+    })
+    const ref_userInformation = db.collection("userInformation").doc(btoa(gmail))
+    batch.set(ref_userInformation, {
+        username: username,
+        gmail: gmail,
+        uuid,
+        avartarCode: "", // avartarCode is ID of Avatar. We can use this avartarCode to get img in an other database. 
+        friends: {
+            status: "public", // Public: List friend is gonna to watch by anyone
+            list: [] // List friends
+        },
+        requests: [], 
+        // requests is a list which contains requirements. The structure's request is object. 
+        // This object contains attibutes: name, gmail, userID, avartarCode, timeSent. 
+        setting: {}, //All config are set by user. Contain: Theme, Black list,...
+        profileStatus: "public" //User's profile is public of private - Anyone can watch your profile if you set public
     })
 
     const result = await batch.commit().then(() => {
