@@ -33,21 +33,21 @@ const loginAccount_Model = async (req, res) => {
 
     // Create accessToken
     const acToken = jwt.sign({ gmail: gmail, userID: uuid }, process.env.SCKEY, {
-      expiresIn: "15m",
+      expiresIn: process.env.LIFE_TIME_ACC_TOKEN,
     });
 
     // Create refreshToken
     const rfToken = jwt.sign({ gmail: gmail, userID: uuid }, process.env.SCKEY, {
-      expiresIn: "1d",
+      expiresIn: process.env.LIFE_TIME_REF_TOKEN,
     });
 
     // Set cookie
-    res.cookie("acToken", acToken, {
+    res.cookie(process.env.ACCTOKEN_COOKIE_NAME, acToken, {
       httpOnly: true,
       secure: true,
     });
 
-    res.cookie("rfToken", rfToken, {
+    res.cookie(process.env.REfTOKEN_COOKIE_NAME, rfToken, {
       httpOnly: true,
       secure: true,
     });
