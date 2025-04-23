@@ -33,7 +33,6 @@
     "wya_backend": "file:"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
     "nodemon": "^3.1.9"
   }
 }
