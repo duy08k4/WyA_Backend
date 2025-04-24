@@ -2,6 +2,7 @@
 const demoRoutes = require("./demo.route")
 const registerRoute = require("./register.route")
 const loginRoute = require("./login.route")
+const friendRequestRoute = require("./friendRequest.route")
 const authorize = require("../middlewares/authenticate")
 
 // Function constructor
@@ -20,6 +21,9 @@ function routes(app) {
 
     // Route: login
     app.use("/login-account", loginRoute)
+    
+    // Route: Friend-Management
+    app.use("/friend-request", friendRequestRoute)
 }
 
 module.exports = routes
