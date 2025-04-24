@@ -38,7 +38,7 @@ const authorize = (req, res, next) => {
                         return next()
                     } else {
                         return res.json({
-                            status: 401,
+                            status: 498,
                             data: {
                                 mess: "The login session has expired"
                             }

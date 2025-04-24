@@ -4,3 +4,4 @@ Code: 403 => Đã đăng nhập nhưng không có quyền truy cập
 Code: 404 => Yêu cầu thất bại.
 Code: 405 => Phương thức request sai.
 Code: 429 => Mã xác thực đã được gửi.
+Code: 498 => Token hết hạn

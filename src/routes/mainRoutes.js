@@ -2,6 +2,7 @@
 const demoRoutes = require("./demo.route")
 const registerRoute = require("./register.route")
 const loginRoute = require("./login.route")
+const getInfoRoute = require("./getUserInfo.route")
 const authorize = require("../middlewares/authenticate")
 
 // Function constructor
@@ -15,10 +16,13 @@ function routes(app) {
         })
     })
 
+    // Route: getInfo
+    app.use("/getInfo", authorize, getInfoRoute)
+
     // Route: create-account
     app.use("/create-account", registerRoute)
 
-    // Route: login
+    // Route: login-account
     app.use("/login-account", loginRoute)
 }
 
