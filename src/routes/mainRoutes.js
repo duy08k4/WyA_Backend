@@ -5,6 +5,9 @@ const loginRoute = require("./login.route")
 const getInfoRoute = require("./getUserInfo.route")
 const friendRequestRoute = require("./friendRequest.route")
 const checkTokenRouter = require("./checkToken.route")
+const searchUserRouter = require("./searchUser.route")
+
+// Import middleware
 const authorize = require("../middlewares/authenticate")
 
 // Function constructor
@@ -28,6 +31,7 @@ function routes(app) {
     app.use("/getInfo", authorize, getInfoRoute)
 
     // Route: searh-user
+    app.use("/searh-user", searchUserRouter)
 
     // Route: check-token
     app.use("check-token", checkTokenRouter)
