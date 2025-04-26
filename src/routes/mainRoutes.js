@@ -6,6 +6,7 @@ const getInfoRoute = require("./getUserInfo.route")
 const friendRequestRoute = require("./friendRequest.route")
 const checkTokenRouter = require("./checkToken.route")
 const searchUserRouter = require("./searchUser.route")
+const getChatDataRouter = require("./getChatData.route")
 
 // Import middleware
 const authorize = require("../middlewares/authenticate")
@@ -32,6 +33,9 @@ function routes(app) {
 
     // Route: search-user
     app.use("/search-user", authorize, searchUserRouter)
+
+    // Route: /data-chat
+    app.use("/data-chat", authorize,getChatDataRouter)
 
     // Route: check-token
     app.use("/check-token", checkTokenRouter)
