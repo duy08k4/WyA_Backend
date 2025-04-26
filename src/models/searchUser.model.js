@@ -20,7 +20,8 @@ const searchUser_Model = async (req, res) => {
                     mess: `Found`,
                     result: [{
                         gmail: userData.gmail,
-                        username: userData.username
+                        username: userData.username,
+                        avartarCode: userData.avartarCode
                     }]
                 }
             }

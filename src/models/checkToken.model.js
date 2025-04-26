@@ -36,38 +36,38 @@ const checkToken_Model = async (req, res) => {
                             });
                         }
 
-                        return {
+                        return res.json({
                             status: 200,
                             data: {
                                 mess: "Allow access"
                             }
-                        }
+                        })
                     } else {
-                        return {
+                        return res.json({
                             status: 498,
                             data: {
                                 mess: "Deny access"
                             }
-                        }
+                        })
                     }
                 })
             } else {
-                return {
+                return res.json({
                     status: 200,
                     data: {
                         mess: "Allow access"
                     }
-                }
+                })
             }
         })
 
     } else {
-        return {
+        return res.json({
             status: 401,
             data: {
                 mess: "Deny access"
             }
-        }
+        })
     }
 }
 

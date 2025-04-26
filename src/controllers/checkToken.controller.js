@@ -10,14 +10,14 @@ const wrongMethod_response = {
 
 // Controller
 class checkTokenController {
-    // [POST] /friend-request/send
+    // [POST] /check-token
     async check(req, res) {
         let requestMethod = req.method
-
+        
         switch (requestMethod) {
             case "POST":
                 const checkToken_response = await checkToken_Model(req, res)
-                return res.json(checkToken_response)
+                break
 
             default:
                 return res.json(wrongMethod_response)

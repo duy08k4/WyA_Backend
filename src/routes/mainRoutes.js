@@ -30,11 +30,11 @@ function routes(app) {
     // Route: getInfo
     app.use("/getInfo", authorize, getInfoRoute)
 
-    // Route: searh-user
-    app.use("/searh-user", searchUserRouter)
+    // Route: search-user
+    app.use("/search-user", authorize, searchUserRouter)
 
     // Route: check-token
-    app.use("check-token", checkTokenRouter)
+    app.use("/check-token", checkTokenRouter)
     
     // Route: friend-request
     app.use("/friend-request", authorize, friendRequestRoute)
