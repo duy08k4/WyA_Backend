@@ -96,4 +96,4 @@ const friendRequestModel = async (req, res) => {
 //     }
 // }
 
-module.exports = friendRequestModel
+module.exports = friendRequestModel 

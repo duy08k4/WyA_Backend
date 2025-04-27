@@ -39,7 +39,10 @@ const checkToken_Model = async (req, res) => {
                         return res.json({
                             status: 200,
                             data: {
-                                mess: "Allow access"
+                                mess: "Allow access",
+                                user: {
+                                    gmail: refreshToken_decoded.gmail
+                                }
                             }
                         })
                     } else {
@@ -55,7 +58,10 @@ const checkToken_Model = async (req, res) => {
                 return res.json({
                     status: 200,
                     data: {
-                        mess: "Allow access"
+                        mess: "Allow access",
+                        user: {
+                            gmail: accessToken_decoded.gmail
+                        }
                     }
                 })
             }

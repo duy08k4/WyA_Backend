@@ -7,6 +7,7 @@ const friendRequestRoute = require("./friendRequest.route")
 const checkTokenRouter = require("./checkToken.route")
 const searchUserRouter = require("./searchUser.route")
 const getChatDataRouter = require("./getChatData.route")
+const db = require("../config/firebaseSDK")
 
 // Import middleware
 const authorize = require("../middlewares/authenticate")
@@ -16,7 +17,10 @@ function routes(app) {
     // Route: demo
     app.use("/demo", demoRoutes)
 
-    app.post("/test", authorize, (req, res) => {
+    app.post("/test", (req, res) => {
+        db.collection("test").doc("test").set({
+            content: "test"
+        })
         return res.json({
             b: "haha"
         })
@@ -29,13 +33,13 @@ function routes(app) {
     app.use("/create-account", registerRoute)
     
     // Route: getInfo
-    app.use("/getInfo", authorize, getInfoRoute)
+    // app.use("/getInfo", authorize, getInfoRoute)
 
     // Route: search-user
     app.use("/search-user", authorize, searchUserRouter)
 
     // Route: /data-chat
-    app.use("/data-chat", authorize,getChatDataRouter)
+    // app.use("/data-chat", authorize,getChatDataRouter)
 
     // Route: check-token
     app.use("/check-token", checkTokenRouter)

@@ -10,12 +10,12 @@ const wrongMethod_response = {
 
 // Controller
 class checkTokenController {
-    // [POST] /check-token
+    // [GET] /check-token
     async check(req, res) {
         let requestMethod = req.method
         
         switch (requestMethod) {
-            case "POST":
+            case "GET":
                 const checkToken_response = await checkToken_Model(req, res)
                 break
 

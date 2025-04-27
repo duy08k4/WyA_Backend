@@ -56,6 +56,9 @@ const loginAccount_Model = async (req, res) => {
       status: 200,
       data: {
         mess: "Log in successfully",
+        user: {
+          gmail
+        }
       },
     }
   }
