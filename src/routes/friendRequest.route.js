@@ -8,3 +8,5 @@ friendRequestRouter.use("/send", friendRequestController.sendRequest)
 // friendRequestRouter.use("/reject", authorize, friendRequestController.rejectRequest)
 
 module.exports = friendRequestRouter
+
+// danh sách bạn bè có dạng array và mỗi phần tử là 1 string, cụ thể là gmail

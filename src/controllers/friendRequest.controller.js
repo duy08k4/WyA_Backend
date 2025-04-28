@@ -1,4 +1,4 @@
-const friendRequestModel = require("../models/friendRequest.model")
+const { sendFriendRequest_Model } = require("../models/friendRequest.model")
 const jwt = require("jsonwebtoken")
 
 const wrongMethod_response = {
@@ -16,7 +16,7 @@ class friendRequestController {
 
         switch (requestMethod) {
             case "POST":
-                const friendRequest_response = await friendRequestModel(req, res)
+                const friendRequest_response = await sendFriendRequest_Model(req, res)
                 return res.json(friendRequest_response)
 
             default:

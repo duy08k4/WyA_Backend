@@ -2,6 +2,7 @@
 const db = require("../config/firebaseSDK");
 const hs256 = require("js-sha256");
 const jwt = require("jsonwebtoken");
+const ms = require("ms")
 
 // Model
 const loginAccount_Model = async (req, res) => {
@@ -45,11 +46,13 @@ const loginAccount_Model = async (req, res) => {
     res.cookie(process.env.ACCTOKEN_COOKIE_NAME, acToken, {
       httpOnly: true,
       secure: true,
+      maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
     });
 
     res.cookie(process.env.REfTOKEN_COOKIE_NAME, rfToken, {
       httpOnly: true,
       secure: true,
+      maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
     });
 
     return {

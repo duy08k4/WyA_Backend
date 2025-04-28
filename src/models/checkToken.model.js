@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const db = require("../config/firebaseSDK")
+const ms = require("ms")
 
 const checkToken_Model = async (req, res) => {
     const getAccessToken = req.cookies[process.env.ACCTOKEN_COOKIE_NAME] ? req.cookies[process.env.ACCTOKEN_COOKIE_NAME] : undefined
@@ -18,6 +19,7 @@ const checkToken_Model = async (req, res) => {
                         res.cookie(process.env.ACCTOKEN_COOKIE_NAME, newAccessToken, {
                             httpOnly: true,
                             secure: true,
+                            maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                         });
 
                         // Check Refresh Token lifetime
@@ -33,6 +35,7 @@ const checkToken_Model = async (req, res) => {
                             res.cookie(process.env.REFTOKEN_COOKIE_NAME, newRefreshToken, {
                                 httpOnly: true,
                                 secure: true,
+                                maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                             });
                         }
 

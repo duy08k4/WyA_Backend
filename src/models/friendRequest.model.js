@@ -1,14 +1,12 @@
 const { FieldValue } = require("firebase-admin/firestore")
 const db = require("../config/firebaseSDK")
 
-// Model
-const friendRequestModel = async (req, res) => {
+// SendFriendRequest Model
+const sendFriendRequest_Model = async (req, res) => {
     const data = req.body.data
     const senderGmail = data.senderGmail
     const receiverGmail = data.receiverGmail
     const batch = db.batch()
-
-    batch.update
 
     if (senderGmail && receiverGmail) {
         if (senderGmail !== receiverGmail) {
@@ -44,28 +42,8 @@ const friendRequestModel = async (req, res) => {
                 }
             })
 
-
-
-            // const senderRef = await db.collection("userInformation").doc(btoa(senderGmail)).update({
-            //     requests: FieldValue.arrayUnion ({ 
-            //         type : "sender",
-            //         request_gmail: receiverGmail
-            //     })
-            // }).then (() => { return true }).catch (() => { return false })
-
-            // const receiverRef = await db.collection("userInformation").doc(btoa(receiverGmail)).update({
-            //     requests: FieldValue.arrayUnion ({ 
-            //         type : "receiver",
-            //         request_gmail: senderGmail
-            //     })
-            // }).then (() => { return true }).catch (() => { return false })
-
-            return {
-                status: 200,
-                data: {
-                    mess: "Sent"
-                }
-            }
+            return result
+            
         } else {
             return {
                 status: 404,
@@ -96,4 +74,4 @@ const friendRequestModel = async (req, res) => {
 //     }
 // }
 
-module.exports = friendRequestModel 
+module.exports = { sendFriendRequest_Model } 

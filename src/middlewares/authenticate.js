@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const ms = require("ms")
 
 const authorize = (req, res, next) => {
     const getAccessToken = req.cookies[process.env.ACCTOKEN_COOKIE_NAME] ? req.cookies[process.env.ACCTOKEN_COOKIE_NAME] : undefined
@@ -17,6 +18,7 @@ const authorize = (req, res, next) => {
                         res.cookie(process.env.ACCTOKEN_COOKIE_NAME, newAccessToken, {
                             httpOnly: true,
                             secure: true,
+                            maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                         });
                         
                         // Check Refresh Token lifetime
@@ -32,6 +34,7 @@ const authorize = (req, res, next) => {
                             res.cookie(process.env.REFTOKEN_COOKIE_NAME, newRefreshToken, {
                                 httpOnly: true,
                                 secure: true,
+                                maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                             });
                         }
 
