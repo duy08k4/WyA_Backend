@@ -10,40 +10,57 @@ const sendFriendRequest_Model = async (req, res) => {
 
     if (senderGmail && receiverGmail) {
         if (senderGmail !== receiverGmail) {
-            const senderRef = db.collection("userInformation").doc(btoa(senderGmail))
-            batch.update(senderRef, {
-                requests: FieldValue.arrayUnion({
-                    type: "sender",
-                    request_gmail: receiverGmail
-                })
-            })
+            const ref = db.collection("userInformation")
+            const senderDoc = await ref.doc(btoa(senderGmail)).get()
+            const receiverDoc = await ref.doc(btoa(receiverGmail)).get()
 
-            const receiverRef = db.collection("userInformation").doc(btoa(receiverGmail))
-            batch.update(receiverRef, {
-                requests: FieldValue.arrayUnion({
-                    type: "receiver",
-                    request_gmail: senderGmail
+            if (senderDoc.exists && receiverDoc) {
+                const senderRef = db.collection("userInformation").doc(btoa(senderGmail))
+                batch.update(senderRef, {
+                    requests: FieldValue.arrayUnion({
+                        type: "sender",
+                        request_gmail: receiverGmail,
+                        request_avartarCode: receiverDoc.data().avartarCode,
+                        request_name: receiverDoc.data().username
+                    })
                 })
-            })
-
-            const result = await batch.commit().then(() => {
-                return {
-                    status: 200,
-                    data: {
-                        mess: "Sent"
+    
+                const receiverRef = db.collection("userInformation").doc(btoa(receiverGmail))
+                batch.update(receiverRef, {
+                    requests: FieldValue.arrayUnion({
+                        type: "receiver",
+                        request_gmail: senderGmail,
+                        request_avartarCode: receiverDoc.data().avartarCode,
+                        request_name: senderDoc.data().username
+                    })
+                })
+    
+                const result = await batch.commit().then(() => {
+                    return {
+                        status: 200,
+                        data: {
+                            mess: "Sent"
+                        }
                     }
-                }
-            }).catch(() => {
+                }).catch(() => {
+                    return {
+                        status: 400,
+                        data: {
+                            mess: "Cant send"
+                        }
+                    }
+                })
+    
+                return result
+            } else {
                 return {
                     status: 400,
                     data: {
                         mess: "Cant send"
                     }
                 }
-            })
+            }
 
-            return result
-            
         } else {
             return {
                 status: 404,
