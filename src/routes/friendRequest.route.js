@@ -4,8 +4,9 @@ const friendRequestController = require("../controllers/friendRequest.controller
 
 // Friend request routes with authentication
 friendRequestRouter.use("/send", friendRequestController.sendRequest)
-// friendRequestRouter.use("/accept", authorize, friendRequestController.acceptRequest)
-// friendRequestRouter.use("/reject", authorize, friendRequestController.rejectRequest)
+friendRequestRouter.use("/revoke", friendRequestController.revokeRequest)
+friendRequestRouter.use("/accept", friendRequestController.acceptRequest)
+friendRequestRouter.use("/remove", friendRequestController.removeFriend)
 
 module.exports = friendRequestRouter
 

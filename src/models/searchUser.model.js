@@ -40,7 +40,7 @@ const checking = async (gmail, typeSearch, searchContent) => {
 
         if (client.exists) {
             const users = await checkCollection.where("username", "==", searchContent).get()
-            const client_listFriend = client.data().friends.list
+            const client_listFriend = client.data().friends.map(request => request.gmail)
             const client_listRequest = client.data().requests.map(request => request.request_gmail)
             const listGmail_DenySearch = [] // Contain gmails which exist in friendList or friendRequest of client
 
@@ -65,7 +65,7 @@ const checking = async (gmail, typeSearch, searchContent) => {
         const client = await checkCollection.doc(btoa(gmail)).get()
 
         if (client.exists) {
-            const client_listFriend = client.data().friends.list
+            const client_listFriend = client.data().friends
             const client_listRequest = client.data().requests.map(request => request.request_gmail)
             const listGmail_DenySearch = [] // Contain gmails which exist in friendList or friendRequest of client
 

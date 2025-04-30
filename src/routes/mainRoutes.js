@@ -6,7 +6,6 @@ const getInfoRoute = require("./getUserInfo.route")
 const friendRequestRouter = require("./friendRequest.route")
 const checkTokenRouter = require("./checkToken.route")
 const searchUserRouter = require("./searchUser.route")
-const getChatDataRouter = require("./getChatData.route")
 const logoutRouter = require("./logout.route")
 const db = require("../config/firebaseSDK")
 
@@ -41,9 +40,6 @@ function routes(app) {
 
     // Route: search-user
     app.use("/search-user", authorize, searchUserRouter)
-
-    // Route: /data-chat
-    // app.use("/data-chat", authorize,getChatDataRouter)
 
     // Route: check-token
     app.use("/check-token", checkTokenRouter)
