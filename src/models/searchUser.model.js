@@ -42,7 +42,7 @@ const checking = async (gmail, typeSearch, searchContent) => {
             const users = await checkCollection.where("username", "==", searchContent).get()
             const client_listFriend = client.data().friends.map(request => request.gmail)
             const client_listRequest = client.data().requests.map(request => request.request_gmail)
-            const listGmail_DenySearch = [] // Contain gmails which exist in friendList or friendRequest of client
+            const listGmail_DenySearch = [gmail] // Contain gmails which exist in friendList or friendRequest of client
 
             users.forEach(user => {
                 const userGmail = user.data().gmail
@@ -54,6 +54,8 @@ const checking = async (gmail, typeSearch, searchContent) => {
                     listGmail_DenySearch.push(userGmail)
                 }
             })
+
+            console.log(listGmail_DenySearch)
 
             return listGmail_DenySearch
 

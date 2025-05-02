@@ -1,12 +1,13 @@
 // Import routes
-const demoRoutes = require("./demo.route")
-const registerRouter = require("./register.route")
 const loginRouter = require("./login.route")
+const logoutRouter = require("./logout.route")
+const registerRouter = require("./register.route")
+const searchUserRouter = require("./searchUser.route")
+const checkTokenRouter = require("./checkToken.route")
+const sendMessageRouter = require("./sendMessage.route")
 const getInfoRoute = require("./getUserInfo.route")
 const friendRequestRouter = require("./friendRequest.route")
-const checkTokenRouter = require("./checkToken.route")
-const searchUserRouter = require("./searchUser.route")
-const logoutRouter = require("./logout.route")
+const demoRoutes = require("./demo.route")
 const db = require("../config/firebaseSDK")
 
 // Import middleware
@@ -46,6 +47,9 @@ function routes(app) {
     
     // Route: friend-request
     app.use("/friend-request", authorize, friendRequestRouter)
+
+    // Route: send-message
+    app.use("/send-message", authorize, sendMessageRouter)
 }
 
 module.exports = routes

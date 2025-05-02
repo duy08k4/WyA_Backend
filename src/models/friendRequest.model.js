@@ -238,9 +238,10 @@ const acceptFriendRequest_Model = async (req, res) => {
                     gmail: data.request_gmail,
                     avartarCode: data.request_avartarCode,
                     chatCode
-                })
+                }),
+                listChatCode: FieldValue.arrayUnion(chatCode)
             })
-
+            
             const targetFriend = db.collection("userInformation").doc(btoa(targetGmail))
             batch.update(targetFriend, {
                 requests: FieldValue.arrayRemove({
@@ -254,7 +255,8 @@ const acceptFriendRequest_Model = async (req, res) => {
                     gmail: data.gmail,
                     avartarCode: data.avartarCode,
                     chatCode
-                })
+                }),
+                listChatCode: FieldValue.arrayUnion(chatCode)
             })
 
             const result = await batch.commit().then(() => {

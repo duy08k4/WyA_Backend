@@ -62,7 +62,9 @@ const createAccount_Model = async (req, res) => {
         uuid,
         avartarCode: "", // avartarCode is ID of Avatar. We can use this avartarCode to get img in an other database. 
         friends: [], //List friend is gonna to watch by anyone
-        requests: [], 
+        requests: [],
+        lastMessages: {},
+        listChatCode: [],
         // requests is a list which contains requirements. The structure's request is object. 
         // This object contains attibutes: name, gmail, userID, avartarCode, timeSent. 
         setting: {}, //All config are set by user. Contain: Theme, Black list,...
