@@ -30,6 +30,7 @@
     "ms": "^2.1.3",
     "nodemailer": "^6.10.1",
     "resend": "^4.3.0",
+    "socket.io": "^4.8.1",
     "uuid": "^11.1.0",
     "wya_backend": "file:"
   },

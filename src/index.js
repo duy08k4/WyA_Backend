@@ -5,6 +5,9 @@ const app = express()
 const dotenv = require("dotenv")
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
+const { Server } = require("socket.io")
+const setupSocket = require("./socket")
+const http = require("http")
 const port = process.env.PORT || 9021
 
 // Import other
@@ -20,10 +23,22 @@ app.use(cors({
     credentials: true
 }))
 
+// Socket server
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_GATE,
+    credentials: true
+  }
+});
+
+setupSocket(io);
+
 // Route
 routes(app)
 
 // Start
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running in PORT ${port}`)
 })
