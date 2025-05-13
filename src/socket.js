@@ -54,13 +54,12 @@ module.exports = function (io) {
                 });
 
                 batch.commit().then(() => {
-                    delete userFriends[btoa(clientGmail)]  
+                    delete userFriends[btoa(clientGmail)]
                     console.log("==> SUCCESS::Client's status was updated to client's friends (Offline). Action: Logout")
                 }).catch((err) => {
                     console.log(err)
                 })
             }
-
         })
 
         // Disconnect
@@ -82,9 +81,28 @@ module.exports = function (io) {
                     console.log(err)
                 })
             }
-            
-            delete userFriends[btoa(clientGmail)]  
+
+            delete userFriends[btoa(clientGmail)]
+            delete users_GmailKey[btoa(clientGmail)]
+            delete users_SocketidKey[btoa(socket.id)]
         });
+
+        // Share location
+        socket.on('shareLocation', (data) => {
+            const clientGmail = data.clientGmail
+            const clientLocation = data.clientLocation
+            const targetUsersGmail = data.targetUsersGmail // Array type
+
+            targetUsersGmail.forEach(userGmail => {
+                const socketId = users_GmailKey[btoa(userGmail)];
+                if (socketId) {
+                    io.to(socketId).emit("receiveLocation", {
+                        from: clientGmail,
+                        location: clientLocation
+                    });
+                }
+            });
+        })
     });
 
     // console.log(userStatus_monitor)

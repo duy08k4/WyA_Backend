@@ -5,6 +5,7 @@ const registerRouter = require("./register.route")
 const searchUserRouter = require("./searchUser.route")
 const checkTokenRouter = require("./checkToken.route")
 const sendMessageRouter = require("./sendMessage.route")
+const mapFunctionRouter = require("./mapFunction.route")
 const getInfoRoute = require("./getUserInfo.route")
 const friendRequestRouter = require("./friendRequest.route")
 const demoRoutes = require("./demo.route")
@@ -50,6 +51,9 @@ function routes(app) {
 
     // Route: send-message
     app.use("/send-message", authorize, sendMessageRouter)
+
+    // Route: map-function
+    app.use("/map-function", authorize, mapFunctionRouter)
 }
 
 module.exports = routes
