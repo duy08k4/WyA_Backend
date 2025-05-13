@@ -19,6 +19,7 @@ const checkToken_Model = async (req, res) => {
                         res.cookie(process.env.ACCTOKEN_COOKIE_NAME, newAccessToken, {
                             httpOnly: true,
                             secure: true,
+                            sameSite: 'None',
                             maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                         });
 
@@ -35,6 +36,7 @@ const checkToken_Model = async (req, res) => {
                             res.cookie(process.env.REFTOKEN_COOKIE_NAME, newRefreshToken, {
                                 httpOnly: true,
                                 secure: true,
+                                sameSite: 'None',
                                 maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                             });
                         }

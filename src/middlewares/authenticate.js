@@ -15,9 +15,10 @@ const authorize = (req, res, next) => {
                             expiresIn: process.env.LIFE_TIME_ACC_TOKEN,
                         })
 
-                        res.cookie(process.env.ACCTOKEN_COOKIE_NAME, newAccessToken, {
+                        res.cookie(process.env.ACCTOKEN__NAME, newAccessToken, {
                             httpOnly: true,
                             secure: true,
+                            sameSite: 'None',
                             maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                         });
                         
@@ -34,6 +35,7 @@ const authorize = (req, res, next) => {
                             res.cookie(process.env.REFTOKEN_COOKIE_NAME, newRefreshToken, {
                                 httpOnly: true,
                                 secure: true,
+                                sameSite: 'None',
                                 maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
                             });
                         }

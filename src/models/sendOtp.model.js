@@ -58,6 +58,7 @@ const sendOTP = async (data, res) => {
       maxAge: 1 * 60 * 1000,
       httpOnly: true,
       secure: true,
+      sameSite: 'None'
     });
 
     return {

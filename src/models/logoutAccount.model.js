@@ -2,11 +2,13 @@ const logoutAccount_Model = (req, res) => {
     res.clearCookie(process.env.ACCTOKEN_COOKIE_NAME, {
         httpOnly: true,
         secure: true,
+        sameSite: 'None'
     });
 
     res.clearCookie(process.env.REfTOKEN_COOKIE_NAME, {
         httpOnly: true,
         secure: true,
+        sameSite: 'None'
     });
 
     return {
