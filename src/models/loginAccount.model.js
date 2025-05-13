@@ -46,13 +46,15 @@ const loginAccount_Model = async (req, res) => {
     res.cookie(process.env.ACCTOKEN_COOKIE_NAME, acToken, {
       httpOnly: true,
       secure: true,
+      path: "/",
       sameSite: 'None',
       maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
     });
 
-    res.cookie(process.env.REfTOKEN_COOKIE_NAME, rfToken, {
+    res.cookie(process.env.REFTOKEN_COOKIE_NAME, rfToken, {
       httpOnly: true,
       secure: true,
+      path: "/",
       sameSite: 'None',
       maxAge: ms(process.env.LIFE_TIME_REF_TOKEN)
     });
