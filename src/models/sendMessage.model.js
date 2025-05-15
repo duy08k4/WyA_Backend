@@ -42,7 +42,7 @@ const sendMessage_Model = async (req, res) => {
     // Send message
     const batch = db.batch()
 
-    if (recentSender !== sender) {
+    if (recentSender && recentSender !== sender) {
         const chatRef = db.collection("chat").doc(btoa(chatCode))
 
         if (getAllNewMessages.length != 0) {
