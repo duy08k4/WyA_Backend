@@ -19,6 +19,12 @@ app.use(express.json())
 dotenv.config()
 app.use(morgan("combined"))
 
+const allowedOrigins = [
+  process.env.FRONTEND_GATE,     // Ionic serve
+  'https://localhost',         // WebView trên Android
+  'capacitor://localhost'      // Capacitor app
+]
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
