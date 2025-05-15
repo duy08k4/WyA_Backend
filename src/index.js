@@ -18,9 +18,17 @@ app.use(cookieParser())
 app.use(express.json())
 dotenv.config()
 app.use(morgan("combined"))
+
 app.use(cors({
-    origin: "*",
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      console.log('❌ Blocked by CORS:', origin)
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
 }))
 
 // Socket server
@@ -40,5 +48,5 @@ routes(app)
 
 // Start
 server.listen(port, () => {
-    console.log(`Server is running in PORT ${port}`)
+  console.log(`Server is running in PORT ${port}`)
 })
