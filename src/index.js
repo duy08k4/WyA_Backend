@@ -20,10 +20,12 @@ dotenv.config()
 app.use(morgan("combined"))
 
 const allowedOrigins = [
-  process.env.FRONTEND_GATE,     // Ionic serve
-  'https://localhost',         // WebView trên Android
-  'capacitor://localhost'      // Capacitor app
-]
+  process.env.FRONTEND_GATE,
+  'https://localhost',
+  'capacitor://localhost',
+  'http://localhost:5173',
+  'http://localhost:8100'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -42,7 +44,14 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_GATE,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log('❌ Blocked by CORS (Socket.IO):', origin);
+        callback(new Error('Not allowed by CORS (Socket.IO)'));
+      }
+    },
     credentials: true
   }
 });
