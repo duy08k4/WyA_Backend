@@ -35,15 +35,19 @@ const sendMessage_Model = async (req, res) => {
     let getAllNewMessages = []
 
     if (newMessDoc.exists) {
-        if (newMessDoc.data().messages.length != 0) getAllNewMessages = newMessDoc.data().messages
+        const docData = newMessDoc.data()
+        if (docData.messages && docData.messages.length !== 0) getAllNewMessages = docData.messages
         recentSender = newMessDoc.data().recentSender
     }
 
     // Send message
     const batch = db.batch()
+    console.log("palspasldalsdpalsdpalsdpl",recentSender)
+    console.log("lolo", sender)
 
     if (recentSender && recentSender !== sender) {
         const chatRef = db.collection("chat").doc(btoa(chatCode))
+        console.log("ádakjhdskajhdkjahdkajhdkjahdkahdkjhakdhkjahdkjahdkj")
 
         if (getAllNewMessages.length != 0) {
             batch.update(chatRef, { // Add message
