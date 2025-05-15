@@ -84,7 +84,7 @@ module.exports = function (io) {
 
             delete userFriends[btoa(clientGmail)]
             delete users_GmailKey[btoa(clientGmail)]
-            delete users_SocketidKey[btoa(socket.id)]
+            delete users_SocketidKey[socket.id]
         });
 
         // Share location
