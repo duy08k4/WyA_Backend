@@ -28,8 +28,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_GATE,
-    credentials: true
+    // origin: process.env.FRONTEND_GATE,
+    origin: "*",
+    methods: ['GET', 'POST'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   }
 });
 
