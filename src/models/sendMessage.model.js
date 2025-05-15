@@ -59,13 +59,14 @@ const sendMessage_Model = async (req, res) => {
             { merge: true }
         )
 
-        batch.update(db.collection("newMessage").doc(btoa(chatCode)), {
-            recentSender: sender
-        },
-            { merge: true }
-        )
-
+        
     }
+    
+    batch.update(db.collection("newMessage").doc(btoa(chatCode)), {
+        recentSender: sender
+    },
+        { merge: true }
+    )
 
     batch.update(db.collection("newMessage").doc(btoa(chatCode)), {
         messages: FieldValue.arrayUnion({
