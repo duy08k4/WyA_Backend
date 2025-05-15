@@ -19,7 +19,7 @@ app.use(express.json())
 dotenv.config()
 app.use(morgan("combined"))
 app.use(cors({
-    origin: process.env.FRONTEND_GATE,
+    origin: "*",
     credentials: true
 }))
 
@@ -28,11 +28,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    // origin: process.env.FRONTEND_GATE,
-    origin: "*",
-    methods: ['GET', 'POST'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: process.env.FRONTEND_GATE,
+    credentials: true
   }
 });
 
