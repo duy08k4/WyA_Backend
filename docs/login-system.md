@@ -1,13 +1,8 @@
 # Login API Documentation
 
-## Base URL
-```
-http://localhost:3000/login-account
-```
-
 ## Endpoints
 
-### Login
+### 1. Login
 Authenticates a user and creates session tokens.
 
 - **Endpoint**: `/login-account`
@@ -21,7 +16,7 @@ Authenticates a user and creates session tokens.
     }
   }
   ```
-- **Success Response** (200):
+- **Success Response** :
   ```json
   {
     "status": 200,
@@ -30,7 +25,7 @@ Authenticates a user and creates session tokens.
     }
   }
   ```
-- **Error Response** (404):
+- **Error Response** :
   ```json
   {
     "status": 404,
@@ -39,6 +34,31 @@ Authenticates a user and creates session tokens.
     }
   }
   ```
+### 2. Logout
+Log out the current user and invalidate their session.
+
+- **Endpoint**: `/logout-account`
+- **Method**: `GET`
+- **Authentication**: Required
+- **Success Response** :
+  ```json
+  {
+    "status": 200,
+    "data": {
+      "mess": "Logged out successfully"
+    }
+  }
+  ```
+- **Error Response** :
+  ```json
+  {
+    "status": 405,
+    "data": {
+      "mess": "Wrong method"
+    }
+  }
+  ```
+
 
 ## Status Codes
 - 200: Request successful

@@ -1,10 +1,5 @@
 # Registration API Documentation
 
-## Base URL
-```
-http://localhost:3000/create-account
-```
-
 ## Endpoints
 
 ### 1. Send OTP
