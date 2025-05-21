@@ -62,31 +62,6 @@ module.exports = function (io) {
             }
         })
 
-        // Disconnect
-        socket.on('disconnect', () => {
-            const clientGmail = users_SocketidKey[socket.id]
-            const clientListFriend_gmail = userFriends[btoa(clientGmail)]
-            const batch = db.batch()
-
-            if (clientListFriend_gmail && clientListFriend_gmail.length) {
-                clientListFriend_gmail.forEach(friendGmail => {
-                    batch.set(db.collection("userActiveStatus").doc(btoa(friendGmail)), {
-                        [btoa(clientGmail)]: false
-                    }, { merge: true })
-                });
-
-                batch.commit().then(() => {
-                    console.log("==> SUCCESS::Client's status was updated to client's friends (Offline). Action: Disconnect")
-                }).catch((err) => {
-                    console.log(err)
-                })
-            }
-
-            delete userFriends[btoa(clientGmail)]
-            delete users_GmailKey[btoa(clientGmail)]
-            delete users_SocketidKey[socket.id]
-        });
-
         // Share location
         socket.on('shareLocation', (data) => {
             const clientGmail = data.clientGmail
@@ -102,6 +77,39 @@ module.exports = function (io) {
                     });
                 }
             });
+        })
+
+        // Disconnect
+        socket.on('disconnect', () => {
+            const clientGmail = users_SocketidKey[socket.id]
+            const clientListFriend_gmail = userFriends[btoa(clientGmail)]
+            const currentSocketId = socket.id
+
+            // Đợi 4 giây xem user có reconnect lại không
+            setTimeout(() => {
+                const stillOnline = Object.entries(users_SocketidKey).some(([sid, gmail]) =>
+                    gmail === clientGmail && sid !== currentSocketId
+                )
+
+                if (!stillOnline && clientListFriend_gmail?.length) {
+                    const batch = db.batch()
+
+                    clientListFriend_gmail.forEach(friendGmail => {
+                        batch.set(db.collection("userActiveStatus").doc(btoa(friendGmail)), {
+                            [btoa(clientGmail)]: false
+                        }, { merge: true })
+                    })
+
+                    batch.commit().then(() => {
+                        console.log("🔴 User auto disconnected (not reconnected). Status set to OFFLINE.")
+                    }).catch(console.error)
+                }
+
+                // Xóa cache dù reconnect hay không
+                delete userFriends[btoa(clientGmail)]
+                delete users_GmailKey[btoa(clientGmail)]
+                delete users_SocketidKey[currentSocketId]
+            }, 4000)
         })
     });
 
