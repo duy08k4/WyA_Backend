@@ -6,7 +6,7 @@ const searchUserRouter = require("./searchUser.route")
 const checkTokenRouter = require("./checkToken.route")
 const sendMessageRouter = require("./sendMessage.route")
 const mapFunctionRouter = require("./mapFunction.route")
-const getInfoRoute = require("./getUserInfo.route")
+const changeDataRouter = require("./changeData.route")
 const friendRequestRouter = require("./friendRequest.route")
 const demoRoutes = require("./demo.route")
 const db = require("../config/firebaseSDK")
@@ -37,8 +37,8 @@ function routes(app) {
     // Route: create-account
     app.use("/create-account", registerRouter)
     
-    // Route: getInfo
-    // app.use("/getInfo", authorize, getInfoRoute)
+    // Route: change-data
+    app.use("/change-data", authorize, changeDataRouter)
 
     // Route: search-user
     app.use("/search-user", authorize, searchUserRouter)
