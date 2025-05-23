@@ -20,12 +20,12 @@ function routes(app) {
     // Route: demo
     app.use("/demo", demoRoutes)
 
-    app.post("/test", (req, res) => {
-        db.collection("test").doc("test").set({
-            content: "test"
-        })
+    app.get("/wake", (req, res) => {
         return res.json({
-            b: "haha"
+            status: 200,
+            data: {
+                mess: "I'm here"
+            }
         })
     })
 
@@ -40,7 +40,7 @@ function routes(app) {
 
     // Route: forgot-password
     app.use("/forgot-password", forgotPasswordRouter)
-    
+
     // Route: change-data
     app.use("/change-data", authorize, changeDataRouter)
 
@@ -49,7 +49,7 @@ function routes(app) {
 
     // Route: check-token
     app.use("/check-token", checkTokenRouter)
-    
+
     // Route: friend-request
     app.use("/friend-request", authorize, friendRequestRouter)
 
