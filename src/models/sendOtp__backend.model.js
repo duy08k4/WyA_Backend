@@ -15,7 +15,7 @@ const verifyCodeChecking = (req) => {
 }
 
 // Send OTP function
-const sendOTP = async(gmail, res) => {
+const sendOTP = async(gmail, res, expireTime, title) => {
   const targetGmail = gmail
   const emailSender = "nluecar240@gmail.com";
   const password = process.env.GMAIL_PASSCODE;
@@ -39,7 +39,7 @@ const sendOTP = async(gmail, res) => {
           ${OTP}
         </span>
       </div>
-      <p style="font-size: 14px; color: #8f98a0; text-align: center;">This code will expire in <strong><u>1 minutes</u></strong>.</p>
+      <p style="font-size: 14px; color: #8f98a0; text-align: center;">This code will expire in <strong><u>${expireTime} minutes</u></strong>.</p>
       <hr style="border: none; border-top: 1px solid #2a475e; margin: 30px 0;">
       <p style="font-size: 12px; color: #8f98a0; text-align: center;">
         If you didn't request this, please ignore this email.<br>
@@ -50,11 +50,11 @@ const sendOTP = async(gmail, res) => {
   const result = await transporter.sendMail({
     from: emailSender,
     to: targetGmail,
-    subject: "WYA - VERIFICATION - DELETE ACCOUNT",
+    subject: `WYA - VERIFICATION - ${title}`,
     html: emailForm,
   }).then(() => {
     res.cookie("otp", OTP, {
-      maxAge: 1 * 60 * 1000,
+      maxAge: expireTime * 60 * 1000,
       httpOnly: true,
       secure: true,
       sameSite: 'None'
@@ -81,13 +81,15 @@ const sendOTP = async(gmail, res) => {
 }
 
 // Send verify code
-const sendOtp__backend = async(req, res, gmail) => {
+const sendOtp__backend = async(req, res, gmail, expireTime, title) => {
   const checking = verifyCodeChecking(req)
+  const OTP_expireTime = expireTime && expireTime > 1 ? parseInt(expireTime) : 1
+  const OTP_title = title ? title : ""
   if (checking.status == 429) {
     return checking
   }
 
-  return sendOTP(gmail, res)
+  return sendOTP(gmail, res, OTP_expireTime, OTP_title)
 }
 
 module.exports = sendOtp__backend

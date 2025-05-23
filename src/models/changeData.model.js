@@ -117,7 +117,7 @@ const deleteAccount__sendVerifyCode__Model = async (req, res) => {
     const clientGmail = data.client_mail
 
     if (clientGmail) {
-        await sendOtp__backend(req, res, clientGmail).then(() => {
+        await sendOtp__backend(req, res, clientGmail, 1, "DELETE ACCOUNT").then(() => {
             return res.json({
                 status: 200,
                 data: {
@@ -156,13 +156,39 @@ const deleteAccount = async (req, res) => {
         if (userExistance.exists) {
             if (checkVerifyCode.status == 200) {
                 // Delete user's information
-                batch.delete(db.collection("accounts").doc(btoa(client_mail)))
-                batch.delete(db.collection("userInformation").doc(btoa(client_mail)))
                 batch.delete(db.collection("mapConnecttion").doc(btoa(client_mail)))
                 batch.delete(db.collection("requestShareLocation").doc(btoa(client_mail)))
                 batch.delete(db.collection("userActiveStatus").doc(btoa(client_mail)))
+                
+                batch.delete(db.collection("accounts").doc(btoa(client_mail)))
+                batch.set(db.collection("userInformation").doc(btoa(client_mail)), {
+                    username: "Account deleted",
+                    gmail: "Account deleted",
+                    uuid: "",
+                    avartarCode: "",
+                    friends: [],
+                    requests: [],
+                    lastMessages: {},
+                    listChatCode: [],
+                    setting: {},
+                    profileStatus: "disable"
+                })
 
                 batch.commit().then(() => {
+                    res.clearCookie(process.env.ACCTOKEN_COOKIE_NAME, {
+                        httpOnly: true,
+                        secure: true,
+                        path: "/",
+                        sameSite: 'None'
+                    });
+
+                    res.clearCookie(process.env.REFTOKEN_COOKIE_NAME, {
+                        httpOnly: true,
+                        secure: true,
+                        path: "/",
+                        sameSite: 'None'
+                    });
+
                     return res.json({
                         status: 200,
                         data: {
