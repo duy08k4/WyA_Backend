@@ -53,7 +53,7 @@ const sendFriendRequest_Model = async (req, res) => {
                         requests: FieldValue.arrayUnion({
                             type: "receiver",
                             request_gmail: senderGmail,
-                            request_avartarCode: receiverDoc.data().avartarCode,
+                            request_avartarCode: senderDoc.data().avartarCode,
                             request_name: senderDoc.data().username
                         })
                     })
@@ -229,7 +229,7 @@ const acceptFriendRequest_Model = async (req, res) => {
             batch.update(clientFriend, {
                 requests: FieldValue.arrayRemove({
                     type: "receiver",
-                    request_gmail: data.request_gmail,
+                    request_gmail: targetGmail,
                     request_avartarCode: data.request_avartarCode,
                     request_name: data.request_name
                 }),
@@ -239,24 +239,30 @@ const acceptFriendRequest_Model = async (req, res) => {
                     avartarCode: data.request_avartarCode,
                     chatCode
                 }),
-                listChatCode: FieldValue.arrayUnion(chatCode)
+                listChatCode: FieldValue.arrayUnion({
+                    gmail: targetGmail,
+                    chatCode
+                })
             })
             
             const targetFriend = db.collection("userInformation").doc(btoa(targetGmail))
             batch.update(targetFriend, {
                 requests: FieldValue.arrayRemove({
                     type: "sender",
-                    request_gmail: data.gmail,
+                    request_gmail: clientGmail,
                     request_avartarCode: data.avartarCode,
                     request_name: data.username
                 }),
                 friends: FieldValue.arrayUnion({
                     username: data.username,
-                    gmail: data.gmail,
+                    gmail: clientGmail,
                     avartarCode: data.avartarCode,
                     chatCode
                 }),
-                listChatCode: FieldValue.arrayUnion(chatCode)
+                listChatCode: FieldValue.arrayUnion({
+                    gmail: clientGmail,
+                    chatCode
+                })
             })
 
             const result = await batch.commit().then(() => {

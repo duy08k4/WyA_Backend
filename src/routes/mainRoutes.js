@@ -9,6 +9,7 @@ const mapFunctionRouter = require("./mapFunction.route")
 const changeDataRouter = require("./changeData.route")
 const friendRequestRouter = require("./friendRequest.route")
 const forgotPasswordRouter = require("./forgotPassword.route")
+const contactRouter = require("./contact.route")
 const demoRoutes = require("./demo.route")
 const db = require("../config/firebaseSDK")
 
@@ -58,6 +59,9 @@ function routes(app) {
 
     // Route: map-function
     app.use("/map-function", authorize, mapFunctionRouter)
+
+    // Route: contact
+    app.use("/contact", authorize, contactRouter)
 }
 
 module.exports = routes

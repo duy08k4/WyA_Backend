@@ -55,8 +55,6 @@ const checking = async (gmail, typeSearch, searchContent) => {
                 }
             })
 
-            console.log(listGmail_DenySearch)
-
             return listGmail_DenySearch
 
         } else {

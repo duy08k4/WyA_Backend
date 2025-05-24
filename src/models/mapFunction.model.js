@@ -10,7 +10,6 @@ const sendRequestShareLocation_Model = async (req, res) => {
     const requestGmail = data.request_gmail
     const requestName = data.request_name
     const requestAvartarcode = data.request_avartarCode
-    console.log(data)
 
     if (clientGmail != "" && requestGmail != "") {
         const batch = db.batch()
@@ -68,7 +67,6 @@ const sendRequestShareLocation_Model = async (req, res) => {
 // Revoke request share location
 const revokeRequestShareLocation_Model = async (req, res) => {
     let data = req.body.data
-    console.log(data)
 
     const clientGmail = data.clientGmail
     const request_gmail = data.request_gmail
@@ -128,7 +126,6 @@ const revokeRequestShareLocation_Model = async (req, res) => {
 // accept RequestShareLocation
 const acceptRequestShareLocation_Model = async (req, res) => {
     const data = req.body.data
-    console.log(data)
 
     const clientGmail = data.clientGmail
     const clientName = data.clientName
@@ -219,8 +216,6 @@ const disconnectShareLocation_Model = async (req, res) => {
     if (disconnectType == "oneConnection") {
         const connection = targetConnection[0]
         const connectionGmail = connection.gmail
-
-        console.log("asdasd", connectionGmail)
 
         batch.update(db.collection("mapConnection").doc(btoa(clientGmail)), {
             [btoa(connectionGmail)]: FieldValue.delete()

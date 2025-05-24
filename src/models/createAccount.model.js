@@ -13,8 +13,15 @@ function createdTime() {
     const month = time.getMonth().toString()
     const year = time.getFullYear().toString()
     const hour = time.getHours().toString()
-
+    
     return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute} - ${date} THG ${month}, ${year}`
+}
+
+// Generate create account time
+function generateAvartarCode() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substr(2, 4);
+    return `user-${(timestamp + random).toString()}`;
 }
 
 // Check existence's account
@@ -46,6 +53,7 @@ const createAccount_Model = async (req, res) => {
     const uuid = "u-wya:" + v4()
 
     const batch = db.batch() // Use to merge requests
+    const createdTimeAccount = createdTime()
 
     const ref_createAccount = db.collection("accounts").doc(btoa(gmail))
     batch.set(ref_createAccount, {
@@ -53,14 +61,14 @@ const createAccount_Model = async (req, res) => {
         gmail: gmail,
         password: hs256(password),
         uuid,
-        createdTime: createdTime(),
+        createdTime: createdTimeAccount,
     })
     const ref_userInformation = db.collection("userInformation").doc(btoa(gmail))
     batch.set(ref_userInformation, {
         username: username,
         gmail: gmail,
         uuid,
-        avartarCode: "", // avartarCode is ID of Avatar. We can use this avartarCode to get img in an other database. 
+        avartarCode: generateAvartarCode(), // avartarCode is ID of Avatar. We can use this avartarCode to get img in an other database. 
         friends: [], //List friend is gonna to watch by anyone
         requests: [],
         lastMessages: {},
@@ -68,7 +76,8 @@ const createAccount_Model = async (req, res) => {
         // requests is a list which contains requirements. The structure's request is object. 
         // This object contains attibutes: name, gmail, userID, avartarCode, timeSent. 
         setting: {}, //All config are set by user. Contain: Theme, Black list,...
-        profileStatus: "public" //User's profile is public of private - Anyone can watch your profile if you set public
+        profileStatus: "public", //User's profile is public of private - Anyone can watch your profile if you set public
+        createdTime: createdTimeAccount,
     })
 
     const result = await batch.commit().then(() => {

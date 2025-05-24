@@ -13,7 +13,6 @@ const getUserInfo_Model = async (req, res) => {
     if (gmail) {
         const userData = await db.collection("userInformation").doc(btoa(gmail)).get()
         if (userData.exists) {
-            console.log(userData.data())
             return {
                 status: 200,
                 data: {

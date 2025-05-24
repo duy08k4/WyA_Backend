@@ -19,7 +19,6 @@ class SendMessageController {
                 return res.json(sendMessage_response)
         
             default:
-                console.log("OK")
                 return res.json(wrongMethod_response)
         }
     }

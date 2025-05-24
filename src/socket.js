@@ -112,6 +112,4 @@ module.exports = function (io) {
             }, 4000)
         })
     });
-
-    // console.log(userStatus_monitor)
 };

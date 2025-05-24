@@ -42,13 +42,10 @@ const sendMessage_Model = async (req, res) => {
 
     // Send message
     const batch = db.batch()
-    console.log("palspasldalsdpalsdpalsdpl",recentSender)
-    console.log("lolo", sender)
 
     if (recentSender && recentSender !== sender) {
         const chatRef = db.collection("chat").doc(btoa(chatCode))
-        console.log("ádakjhdskajhdkjahdkajhdkjahdkahdkjhakdhkjahdkjahdkj")
-
+        
         if (getAllNewMessages.length != 0) {
             batch.update(chatRef, { // Add message
                 messages: FieldValue.arrayUnion(...getAllNewMessages)
