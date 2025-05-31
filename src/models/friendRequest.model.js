@@ -320,15 +320,40 @@ const removeFriend_Model = async (req, res) => {
 
         if (clientDoc.exists && friendDoc.exists) {
             const batch = db.batch()
+            const chatCode = clientData.chatCode
 
+            // Remove friend in friend list (both)
             batch.update(db.collection("userInformation").doc(btoa(clientGmail)), {
                 friends: FieldValue.arrayRemove(friendData),
+                listChatCode: FieldValue.arrayRemove({
+                    chatCode: chatCode,
+                    gmail: friendGmail
+                }),
+                [`lastMessages.${chatCode}`]: FieldValue.delete()
             })
-
+            
             batch.update(db.collection("userInformation").doc(btoa(friendGmail)), {
                 friends: FieldValue.arrayRemove(clientData),
+                listChatCode: FieldValue.arrayRemove({
+                    chatCode: chatCode,
+                    gmail: clientGmail
+                }),
+                [`lastMessages.${chatCode}`]: FieldValue.delete()
             })
 
+            // Remove chat
+            batch.delete(db.collection("chat").doc(btoa(chatCode)))
+            batch.delete(db.collection("newMessage").doc(btoa(chatCode)))
+
+            // Remove share location
+            batch.update(db.collection("requestShareLocation").doc(btoa(clientGmail)), {
+                [`${btoa(friendGmail)}`]: FieldValue.delete()
+            })
+
+            batch.update(db.collection("requestShareLocation").doc(btoa(friendGmail)), {
+                [`${btoa(clientGmail)}`]: FieldValue.delete()
+            })
+            
             const result = await batch.commit().then(() => {
                 return {
                     status: 200,

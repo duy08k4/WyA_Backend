@@ -85,31 +85,31 @@ module.exports = function (io) {
             const clientListFriend_gmail = userFriends[btoa(clientGmail)]
             const currentSocketId = socket.id
 
-            // Đợi 4 giây xem user có reconnect lại không
-            setTimeout(() => {
-                const stillOnline = Object.entries(users_SocketidKey).some(([sid, gmail]) =>
-                    gmail === clientGmail && sid !== currentSocketId
-                )
+            // Thoát là coi như off
+            const stillOnline = Object.entries(users_SocketidKey).some(([sid, gmail]) =>
+                gmail === clientGmail && sid !== currentSocketId
+            )
 
-                if (!stillOnline && clientListFriend_gmail?.length) {
-                    const batch = db.batch()
+            if (!stillOnline && clientListFriend_gmail?.length) {
+                const batch = db.batch()
 
-                    clientListFriend_gmail.forEach(friendGmail => {
-                        batch.set(db.collection("userActiveStatus").doc(btoa(friendGmail)), {
-                            [btoa(clientGmail)]: false
-                        }, { merge: true })
-                    })
+                clientListFriend_gmail.forEach(friendGmail => {
+                    batch.set(db.collection("userActiveStatus").doc(btoa(friendGmail)), {
+                        [btoa(clientGmail)]: false
+                    }, { merge: true })
+                })
 
-                    batch.commit().then(() => {
-                        console.log("🔴 User auto disconnected (not reconnected). Status set to OFFLINE.")
-                    }).catch(console.error)
-                }
+                batch.commit().then(() => {
+                    console.log("🔴 User auto disconnected (not reconnected). Status set to OFFLINE.")
+                }).catch(console.error)
+            }
 
-                // Xóa cache dù reconnect hay không
-                delete userFriends[btoa(clientGmail)]
-                delete users_GmailKey[btoa(clientGmail)]
-                delete users_SocketidKey[currentSocketId]
-            }, 4000)
+            // Xóa cache
+            delete userFriends[btoa(clientGmail)]
+            delete users_GmailKey[btoa(clientGmail)]
+            delete users_SocketidKey[currentSocketId]
+            // setTimeout(() => {
+            // }, 3000)
         })
     });
 };
